@@ -3,6 +3,7 @@ import { Brand, Product, Subcategory } from "../../../DB/index.js"
 import { APPError } from "../../utils/appError.js"
 import { messages } from "../../utils/constant/messaeges.js"
 import cloudinary, { deleteCloudImage } from "../../utils/cloud.js"
+import { ApiFeature } from "../../utils/apiFeatures.js"
 
 // add product
 const addProduct = async (req, res, next) => {
@@ -173,12 +174,30 @@ const updateProduct = async (req, res, next) => {
 
 // get product
 const getAllProducts = async (req, res, next) => {
-    const products = await Product.find()
+    const apiFeature = new ApiFeature(Product.find(), req.query).pagination().sort().select().filter()
+    const products = await apiFeature.mongooseQuery
     // send res
     return res.status(200).json({
         message: messages.product.fetchedSuccessfully,
         success: true,
         data: products
+    })
+}
+
+// get specific product
+const getProductById = async (req, res, next) => {
+    // get data 
+    const { productId } = req.params
+    // check existacnce
+    const productExist = await Product.findById(productId)
+    if (!productExist) {
+        return next(new APPError(messages.product.notExist, 404))
+    }
+    // send res 
+    return res.status(200).json({
+        message: messages.product.fetchedSuccessfully,
+        success: true,
+        data: productExist
     })
 
 }
@@ -216,5 +235,6 @@ export {
     addProduct,
     updateProduct,
     getAllProducts,
+    getProductById,
     deleteProduct
 }
