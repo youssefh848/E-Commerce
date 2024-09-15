@@ -19,7 +19,8 @@ subcategoryRouter.post('/',
 
 // update subcategory  todo authentcation,auth
 subcategoryRouter.put('/:subcategoryId',
-    fileUpload({ folder: 'subcategory' }).single('image'),
+    //fileUpload({ folder: 'subcategory' }).single('image'),
+    cloudUpload().single('image'),
     isValid(updatesubCategoryVal),
     asyncHandler(updateSubcategory)
 )

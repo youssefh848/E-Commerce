@@ -28,7 +28,7 @@ categoryRouter.put('/:categoryId',
 categoryRouter.get('/', asyncHandler(getCategories))
 
 //git specific category
-categoryRouter.get('/:categoryId', isValid(getCategoryByIdVal), asyncHandler(getCategoryById))    
+categoryRouter.get('/:categoryId', asyncHandler(getCategoryById))    
 
 // delete category todo authentication ,auth
 categoryRouter.delete('/:categoryId', isValid(deleteCategoryVal), asyncHandler(deleteCategory))    

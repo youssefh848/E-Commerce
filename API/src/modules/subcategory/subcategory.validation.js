@@ -9,7 +9,7 @@ export const addSubcategoryVal = joi.object({
 export const updatesubCategoryVal = joi.object({
     name: generalFields.name,
     subcategoryId: generalFields.objectId.required(),
-    category: generalFields.objectId.required()
+   // category: generalFields.objectId.required()
 })
 export const getsubCategoryVal = joi.object({
     categoryId: generalFields.objectId.required()

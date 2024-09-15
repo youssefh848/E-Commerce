@@ -55,7 +55,8 @@ const addCategory = async (req, res, next) => {
    const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
       folder: '/E-Commerce/category'
    })
-   console.log(req.file);
+   // Set failImage in case anything fails after image upload
+   req.failImage = { secure_url, public_id };
    // prepare data
    const slug = slugify(name)
    const category = new Category({
@@ -67,8 +68,6 @@ const addCategory = async (req, res, next) => {
    // add to db
    const createdCategory = await category.save()
    if (!createdCategory) {
-      // rollback delete image
-      req.failImage = { secure_url, public_id }
       return next(new APPError(messages.category.failToCreate, 500))
    }
    // send res
@@ -207,7 +206,9 @@ const deleteCategory = async (req, res, next) => {
    /* if (category.image && category.image.path) {          // delete in file sys
       deleteFile(category.image.path);
    } */
-   await deleteCloudImage(category.image.public_id)
+   if (category.image && category.image.public_id) {
+      await deleteCloudImage(category.image.public_id)
+   }
    // delete category
    const deleteCategory = await Category.findByIdAndDelete(categoryId)
    if (!deleteCategory) {

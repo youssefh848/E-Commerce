@@ -18,6 +18,8 @@ const addBrand = async (req, res, next) => {
     const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
         folder: 'E-Commerce/brand',
     })
+    // Set failImage in case anything fails after image upload
+    req.failImage = { secure_url, public_id };
     // prepere data
     const slug = slugify(name)
     const brand = new Brand({
@@ -29,8 +31,6 @@ const addBrand = async (req, res, next) => {
     // add to db
     const createBrand = await brand.save();
     if (!createBrand) {
-        // rollback delete logo
-        req.failImage = { secure_url, public_id }
         return next(new APPError(messages.brand.failToCreate, 500))
     }
     // send res
@@ -130,8 +130,9 @@ const deleteBrand = async (req, res, next) => {
         return next(new APPError(messages.brand.notExist, 404))
     }
     // delete image 
-    await deleteCloudImage(brandExist.logo.public_id)
-    // delete brand
+    if (brandExist.image && brandExist.image.public_id) {
+        await deleteCloudImage(brandExist.image.public_id)
+    }    // delete brand
     const deleteBrand = await Brand.findByIdAndDelete(brandId)
     if (!deleteBrand) {
         return next(new APPError(messages.brand.failToDelete, 500))

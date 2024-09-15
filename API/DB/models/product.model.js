@@ -55,7 +55,7 @@ const schema = new Schema({
     colors: [String],
     sizes: [String],
     // ids
-    categor: {
+    category: {
         type: Types.ObjectId,
         ref: 'Category',
         required: true

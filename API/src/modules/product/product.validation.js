@@ -14,3 +14,18 @@ export const addProductVal = joi.object({
     subcategory:generalFields.objectId.required(),
     brand:generalFields.objectId.required()
 })
+export const updateProductVal = joi.object({
+    name: generalFields.name,
+    description: generalFields.description,
+    stock: generalFields.stock,
+    price: generalFields.price,
+    discount: generalFields.discount,
+    discountType: generalFields.discountTybe,
+    colors:generalFields.colors,
+    sizes:generalFields.sizes,
+   productId:generalFields.objectId.required()
+})
+
+export const deleteProductVal = joi.object({
+    productId: generalFields.objectId.required()
+})
