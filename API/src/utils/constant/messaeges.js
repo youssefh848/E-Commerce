@@ -18,5 +18,11 @@ export const messages = {
     file: { required: 'file is required' },
     product: generateMessage('product'),
     order: generateMessage('order'),
-    user: generateMessage('user'),
+    user: {
+        ...generateMessage('user'),
+        verified: "user verified successfully",
+        invalidCredntiols: "invalid Credntiols",
+        notVerified: "not Verified",
+        loginSuccessfully: "login successfully"
+    }
 }

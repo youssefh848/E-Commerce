@@ -4,6 +4,7 @@ import { APPError } from "../../utils/appError.js";
 import { messages } from "../../utils/constant/messaeges.js";
 import { deleteFile } from "../../utils/file-function.js";
 import cloudinary, { deleteCloudImage } from "../../utils/cloud.js";
+import { ApiFeature } from "../../utils/apiFeatures.js";
 
 
 // add subcategory
@@ -196,7 +197,9 @@ const updateSubcategory = async (req, res, next) => {
 const getSubcategory = async (req, res, next) => {
     // get data from req
     const { categoryId } = req.params
-    const subcategorys = await Subcategory.find({ category: categoryId }).populate([{ path: 'category' }])
+    // const subcategorys = await Subcategory.find({ category: categoryId }).populate([{ path: 'category' }])
+    const apiFeature = new ApiFeature(Subcategory.find({ category: categoryId }).populate([{ path: 'category' }]), req.query).pagination().sort().select().filter()
+    const subcategorys = await apiFeature.mongooseQuery
     // send res
     return res.status(200).json({
         success: true,

@@ -20,7 +20,12 @@ export const generalFields = {
     discountTybe: joi.string().valid(...Object.values(discountTybes)),
     colors: joi.custom(parseArray),
     sizes: joi.custom(parseArray),
-    rate: joi.number().min(1).max(5)
+    rate: joi.number().min(1).max(5),
+    email: joi.string().email(),
+    phone: joi.string().pattern(new RegExp(/^01[0-2,5]{1}[0-9]{8}$/)),
+    password:joi.string().pattern(new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)),
+    cPassword:joi.string().valid(joi.ref('password')),
+    DOB: joi.string(),
 }
 
 export const isValid = (schema) => {

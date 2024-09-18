@@ -11,9 +11,7 @@ export const updatesubCategoryVal = joi.object({
     subcategoryId: generalFields.objectId.required(),
    // category: generalFields.objectId.required()
 })
-export const getsubCategoryVal = joi.object({
-    categoryId: generalFields.objectId.required()
-})
+
 export const deleteSubCategoryVal = joi.object({
     subcategoryId: generalFields.objectId.required()
 })
