@@ -51,7 +51,7 @@ const verifyAccount = async (req, res, next) => {
     // get data from req
     const { token } = req.params;
     // check token
-    const payload = verifyToken(token)
+    const payload = verifyToken({token})
     await User.findOneAndUpdate({ email: payload.email, status: status.PENDING }, { status: status.VERIFIED })
     // send res
     return res.status(200).json({ message: messages.user.verified, success: true })

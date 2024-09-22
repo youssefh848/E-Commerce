@@ -26,7 +26,8 @@ const addBrand = async (req, res, next) => {
         name,
         slug,
         logo: { secure_url, public_id },
-        // createdBy:   todo token
+        createdBy: req.authUser._id,
+        // updatedBy: req.authUser._id
     })
     // add to db
     const createBrand = await brand.save();
@@ -64,6 +65,7 @@ const updateBrand = async (req, res, next) => {
         brandExist.name = name
         brandExist.slug = slug
     }
+    brandExist.updatedBy = req.authUser._id;
     // upload image
     if (req.file) {
         // delete old image

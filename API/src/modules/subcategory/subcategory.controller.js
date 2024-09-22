@@ -74,7 +74,7 @@ const addSubcategory = async (req, res, next) => {
         slug,
         category,
         image: { secure_url, public_id },
-        // todo createdBy
+        createdBy: req.authUser._id
     })
     // ad to db
     const subcategoryCreated = await subcategory.save()
@@ -178,6 +178,7 @@ const updateSubcategory = async (req, res, next) => {
     if (name) {
         subcategoryExists.name = name;  // Update the name field
         subcategoryExists.slug = slugify(name) // update slug field
+        subcategoryExists.updatedBy = req.authUser._id;
     }
     // update to db
     const subcategoryUpdated = await subcategoryExists.save()

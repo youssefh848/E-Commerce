@@ -30,9 +30,14 @@ const schema = new Schema({
     createdBy: {
         type: Types.ObjectId,
         ref: 'User',
-        required: false    //todo true
+        required: true
+    },
+    updatedBy: {
+        type: Types.ObjectId,
+        ref: 'User',
+        // required: true
     }
-
+    
 }, { timestamps: true, versionKey: false })
 
 // model

@@ -76,18 +76,18 @@ const schema = new Schema({
         max: 5,
         default: 5
     },
-   /*  rateCount: {
-        type: Number
-    }, */
+    /*  rateCount: {
+         type: Number
+     }, */
     createdBy: {
         type: Types.ObjectId,
         ref: 'User',
-        required: false   // todo true
+        required: true
     },
     updatedBy: {
         type: Types.ObjectId,
         ref: 'User',
-        required: false   // todo true
+       // required: true
     }
 
 }, { timestamps: true, versionKey: false })

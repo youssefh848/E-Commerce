@@ -5,19 +5,26 @@ import { fileUpload } from "../../utils/multer.js";
 import { addCategory, deleteCategory, getCategories, getCategoryById, updateCategory } from "./category.controller.js";
 import { addCategoryVal, deleteCategoryVal, getCategoryByIdVal, updateCategoryVal } from "./category.validation.js";
 import { cloudUpload } from "../../utils/multer-cloud.js";
+import { isAuthenticated } from "../../middelware/authentication.js";
+import { isAuthorized } from "../../middelware/authorization.js";
+import { roles } from "../../utils/constant/enums.js";
 
 const categoryRouter = Router();
 
-// add category todo authentication & auth
+// add category  
 categoryRouter.post('/',
-   // fileUpload({ folder: 'category' }).single('image'),  file sys
-   cloudUpload().single('image'),
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
+    // fileUpload({ folder: 'category' }).single('image'),  file sys
+    cloudUpload().single('image'),
     isValid(addCategoryVal),
     asyncHandler(addCategory)
 );
 
-// update category todo authentication ,auth
+// update category 
 categoryRouter.put('/:categoryId',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     //fileUpload({ folder: 'category' }).single('image'),  //file sys
     cloudUpload().single('image'),
     isValid(updateCategoryVal),
@@ -25,13 +32,18 @@ categoryRouter.put('/:categoryId',
 )
 
 // get all category
-categoryRouter.get('/', asyncHandler(getCategories))
+categoryRouter.get('/', asyncHandler(getCategories))  // validation
 
 //git specific category
-categoryRouter.get('/:categoryId', asyncHandler(getCategoryById))    
+categoryRouter.get('/:categoryId', asyncHandler(getCategoryById))  // validation
 
-// delete category todo authentication ,auth
-categoryRouter.delete('/:categoryId', isValid(deleteCategoryVal), asyncHandler(deleteCategory))    
+// delete category 
+categoryRouter.delete('/:categoryId',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isValid(deleteCategoryVal),
+    asyncHandler(deleteCategory)
+)
 
 
 

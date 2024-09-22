@@ -1,14 +1,26 @@
-// import { verifyToken } from "../utils/token.js"
+import { User } from "../../DB/index.js"
+import { APPError } from "../utils/appError.js"
+import { status } from "../utils/constant/enums.js"
+import { messages } from "../utils/constant/messaeges.js"
+import { verifyToken } from "../utils/token.js"
 
-// export const authentication = () => {
-//     return (req, res, next) => {
-//         const { autherization } = req.headers
-//         const [bearer, token] = autherization.split(' ')
-//         if (bearer == 'access-token') {
-//             const payload = verifyToken({ token, secretkey: process.env.SECRET_KEY_ACCESS_TOKEN })
-//         } else if (bearer == 'reset-password') {
-//             verifyToken({ token, secretkey: process.env.SECRET_KEY_RESET_PASSWORD })
-//         }
-//     }
-
-// }
+export const isAuthenticated = () => {
+    return async (req, res, next) => {
+        // token from headers
+        const { token } = req.headers
+        // decoded token 
+        const payload = verifyToken({ token })
+        // if token is valid
+        if (payload.message) {
+            return next(new APPError(payload.message, 401))
+        }
+        // check user exist 
+        const authUser = await User.findOne({ _id: payload._id, status: status.VERIFIED })
+        if (!authUser) {
+            return next(new APPError(messages.user.notExist, 404))
+        }
+        // set user to req
+        req.authUser = authUser
+        next()
+    }
+}

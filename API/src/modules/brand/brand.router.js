@@ -4,19 +4,26 @@ import { isValid } from "../../middelware/validation.js";
 import { addBrandVal, deleteBrandVal, getSpecificBrandVal, updateBrandVal } from "./brand.validation.js";
 import { asyncHandler } from "../../utils/appError.js";
 import { addBrand, deleteBrand, getAllBrand, getBrandById, updateBrand } from "./brand.controller.js";
+import { isAuthenticated } from "../../middelware/authentication.js";
+import { isAuthorized } from "../../middelware/authorization.js";
+import { roles } from "../../utils/constant/enums.js";
 
 
 const brandRouter = Router();
 
-// add brand  todo authentication,autherization
+// add brand  
 brandRouter.post('/',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     cloudUpload().single('logo'),
     isValid(addBrandVal),
     asyncHandler(addBrand)
 )
 
-// update brand  todo authentication,autherization
+// update brand 
 brandRouter.put('/:brandId',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     cloudUpload().single('logo'),
     isValid(updateBrandVal),
     asyncHandler(updateBrand)
@@ -27,10 +34,15 @@ brandRouter.put('/:brandId',
 brandRouter.get('/', asyncHandler(getAllBrand))
 
 // get specific brand
-brandRouter.get('/:brandId',isValid(getSpecificBrandVal), asyncHandler(getBrandById))
+brandRouter.get('/:brandId', isValid(getSpecificBrandVal), asyncHandler(getBrandById))
 
-// delete brand  todo authentication,autherization
- brandRouter.delete('/:brandId',isValid(deleteBrandVal), asyncHandler(deleteBrand))
+// delete brand  
+brandRouter.delete('/:brandId',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isValid(deleteBrandVal),
+    asyncHandler(deleteBrand)
+)
 
 
 export default brandRouter;

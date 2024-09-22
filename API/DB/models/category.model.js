@@ -25,16 +25,21 @@ const schema = new Schema({
         public_id: {
             type: String,
             required: true
-        } 
-      /*   path: {
-            type: String,              file system
-            required: true
-        } */
+        }
+        /*   path: {
+              type: String,              file system
+              required: true
+          } */
     },
     createdBy: {
         type: Types.ObjectId,
         ref: 'User',
-        required: false //todo
+        required: true
+    },
+    updatedBy: {
+        type: Types.ObjectId,
+        ref: 'User',
+        // required: true
     }
 
 

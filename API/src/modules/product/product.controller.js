@@ -53,7 +53,8 @@ const addProduct = async (req, res, next) => {
         subcategory,
         mainImage,
         subImages,
-        // todo createdBy updatedBy
+        createdBy: req.authUser._id,
+        // updatedBy: req.authUser._id
     })
     // add to db 
     const createdProduct = await product.save()
@@ -164,6 +165,8 @@ const updateProduct = async (req, res, next) => {
     if (!productUpdated) {
         return next(new APPError(messages.product.failToUpdate, 500))
     }
+    // Add the updatedBy field
+    productExist.updatedBy = req.authUser._id;
     // send res
     res.status(200).json({
         message: messages.product.updated,

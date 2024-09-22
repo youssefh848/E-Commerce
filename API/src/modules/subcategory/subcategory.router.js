@@ -5,11 +5,16 @@ import { addSubcategoryVal, deleteSubCategoryVal, updatesubCategoryVal } from ".
 import { asyncHandler } from "../../utils/appError.js";
 import { addSubcategory, deleteSubcategory, getSubcategory, subcategoryById, updateSubcategory } from "./subcategory.controller.js";
 import { cloudUpload } from "../../utils/multer-cloud.js";
+import { isAuthenticated } from "../../middelware/authentication.js";
+import { isAuthorized } from "../../middelware/authorization.js";
+import { roles } from "../../utils/constant/enums.js";
 
 const subcategoryRouter = Router();
 
-// add subcategory  todo authentcation,auth
+// add subcategory  
 subcategoryRouter.post('/',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     //fileUpload({ folder: 'subcategory' }).single('image'),  // file sys
     cloudUpload().single('image'),
     isValid(addSubcategoryVal),
@@ -17,8 +22,10 @@ subcategoryRouter.post('/',
 )
 
 
-// update subcategory  todo authentcation,auth
+// update subcategory 
 subcategoryRouter.put('/:subcategoryId',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
     //fileUpload({ folder: 'subcategory' }).single('image'),
     cloudUpload().single('image'),
     isValid(updatesubCategoryVal),
@@ -31,8 +38,13 @@ subcategoryRouter.get('/:categoryId', asyncHandler(getSubcategory))
 // get specific subcategory
 subcategoryRouter.get('/specific/:subcategoryId', asyncHandler(subcategoryById))
 
-// delete subcategory todo authentcation,auth
-subcategoryRouter.delete('/:subcategoryId', isValid(deleteSubCategoryVal), asyncHandler(deleteSubcategory))
+// delete subcategory 
+subcategoryRouter.delete('/:subcategoryId',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN, roles.SELLER]),
+    isValid(deleteSubCategoryVal),
+    asyncHandler(deleteSubcategory)
+)
 
 
 

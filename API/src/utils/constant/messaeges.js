@@ -23,6 +23,7 @@ export const messages = {
         verified: "user verified successfully",
         invalidCredntiols: "invalid Credntiols",
         notVerified: "not Verified",
-        loginSuccessfully: "login successfully"
+        loginSuccessfully: "login successfully",
+        unauthorized: "unauthorized to access this api"
     }
 }
