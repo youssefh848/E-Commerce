@@ -25,5 +25,6 @@ export const messages = {
         notVerified: "not Verified",
         loginSuccessfully: "login successfully",
         unauthorized: "unauthorized to access this api"
-    }
+    },
+    review: generateMessage('review'),
 }

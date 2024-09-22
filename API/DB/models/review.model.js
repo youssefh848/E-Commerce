@@ -18,7 +18,8 @@ const schema = new Schema({
         type: Types.ObjectId,
         ref: 'Product',
         required: true
-    }
+    },
+    isVerified: Boolean
 }, { timestamps: true, versionKey: false })
 
 // model

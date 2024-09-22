@@ -23,9 +23,11 @@ export const generalFields = {
     rate: joi.number().min(1).max(5),
     email: joi.string().email(),
     phone: joi.string().pattern(new RegExp(/^01[0-2,5]{1}[0-9]{8}$/)),
-    password:joi.string().pattern(new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)),
-    cPassword:joi.string().valid(joi.ref('password')),
+    password: joi.string().pattern(new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)),
+    cPassword: joi.string().valid(joi.ref('password')),
     DOB: joi.string(),
+    comment: joi.string().max(2000),
+    rate: joi.number().min(1).max(5),
 }
 
 export const isValid = (schema) => {
