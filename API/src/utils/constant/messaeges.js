@@ -27,4 +27,8 @@ export const messages = {
         unauthorized: "unauthorized to access this api"
     },
     review: generateMessage('review'),
+    coupon: {
+        ...generateMessage('coupon'),
+        discountAmount: "must be less than 100",
+    }
 }

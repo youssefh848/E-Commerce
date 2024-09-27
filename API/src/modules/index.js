@@ -4,6 +4,7 @@ import categoryRouter from './category/category.router.js';
 import productRouter from "./product/product.router.js";
 import reviewRouter from "./review/review.router.js";
 import subcategoryRouter from './subcategory/subcategory.router.js';
+import couponRouter from './coupon/coupon.router.js';
 
 export {
     authRouter,
@@ -11,6 +12,7 @@ export {
     categoryRouter,
     productRouter,
     reviewRouter,
-    subcategoryRouter
+    subcategoryRouter,
+    couponRouter,
 };
 
