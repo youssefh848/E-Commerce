@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { roles, status } from "../../src/utils/constant/enums.js";
 
 //schema
@@ -36,11 +36,9 @@ const schema = new Schema({
     },
     otp: {
         type: String,
-        default: null
     },
     otpExpires: {
         type: Date,
-        default: null
     },
     image: {
         secure_url: { type: String, required: false },
@@ -49,7 +47,8 @@ const schema = new Schema({
     DOB: {
         type: String,
         default: Date.now()
-    }
+    },
+    wishList: [{ type: Types.ObjectId, ref: "Product" }]
 
 
 }, { timestamps: true, versionKey: false })

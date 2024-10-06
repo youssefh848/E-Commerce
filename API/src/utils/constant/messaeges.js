@@ -18,6 +18,7 @@ export const messages = {
     file: { required: 'file is required' },
     product: generateMessage('product'),
     order: generateMessage('order'),
+    wishList: generateMessage('wishList'),
     user: {
         ...generateMessage('user'),
         verified: "user verified successfully",
