@@ -16,7 +16,14 @@ export const messages = {
     subcategory: generateMessage('subcategory'),
     brand: generateMessage('brand'),
     file: { required: 'file is required' },
-    product: generateMessage('product'),
+    product: {
+        ...generateMessage('product'),
+        stockNotEnough: 'stock is not enough',
+        addedToCart: 'product added to cart successfully',
+        failToAddToCart: 'Failed to add product to cart',
+        deletedFromCart: 'product deleted from cart successfully',
+        notExistInCart: 'product not exist in cart',
+    },
     order: generateMessage('order'),
     wishList: generateMessage('wishList'),
     user: {

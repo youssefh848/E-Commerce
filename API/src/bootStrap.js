@@ -1,5 +1,5 @@
 import { globalErrorHandling } from "./utils/appError.js"
-import { authRouter, brandRouter, categoryRouter, couponRouter, productRouter, reviewRouter, subcategoryRouter, wishListRouter } from "./modules/index.js"
+import { authRouter, brandRouter, cartRouter, categoryRouter, couponRouter, productRouter, reviewRouter, subcategoryRouter, wishListRouter } from "./modules/index.js"
 
 export const bootStrap = (app, express) => {
     // parse req
@@ -15,6 +15,7 @@ export const bootStrap = (app, express) => {
     app.use('/review', reviewRouter)
     app.use('/coupon', couponRouter)
     app.use('/wishList', wishListRouter)
+    app.use('/cart', cartRouter)
     // global error
     app.use(globalErrorHandling)
 }

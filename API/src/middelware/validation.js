@@ -15,6 +15,7 @@ export const generalFields = {
     description: joi.string().max(2000),
     objectId: joi.string().hex().length(24),
     stock: joi.number().positive(),
+    quantity: joi.number().positive(),
     price: joi.number().positive(),
     discount: joi.number(),
     discountTybe: joi.string().valid(...Object.values(discountTybes)),

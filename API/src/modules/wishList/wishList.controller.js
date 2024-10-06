@@ -24,7 +24,7 @@ const getWishList = async (req, res, next) => {
     // get from db
     const user = await User.findById(userId)
     if (!user.wishList.includes(productId)) {
-        return next(new APPError(messages.product.notExist))
+        return next(new APPError(messages.product.notExist, 404))
     }
     // send res
     return res.status(200).json({
@@ -42,7 +42,7 @@ const deleteWishList = async (req, res, next) => {
     // check existence 
     const user = await User.findById(userId)
     if (!user.wishList.includes(productId)) {
-        return next(new APPError(messages.product.notExist))
+        return next(new APPError(messages.product.notExist, 404))
     }
     // delete from db
     const userUpdated = await User.findByIdAndUpdate(userId, { $pull: { wishList: productId } }, { new: true })

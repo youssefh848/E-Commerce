@@ -87,10 +87,14 @@ const schema = new Schema({
     updatedBy: {
         type: Types.ObjectId,
         ref: 'User',
-       // required: true
+        // required: true
     }
 
 }, { timestamps: true, versionKey: false })
+
+schema.methods.inStock = function (quantity) {
+    return this.stock < quantity ? false : true
+}
 
 // model
 export const Product = model('Product', schema);
