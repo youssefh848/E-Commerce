@@ -56,7 +56,8 @@ const creatOrder = async (req, res, next) => {
             finalPrice: productExist.finalPrice,
             quantity: product.quantity,
             discount: productExist.discount,
-            name: productExist.name
+            name: productExist.name,
+            mainImage: productExist.mainImage.secure_url
         })
     }
     // Apply coupon discount if exists
@@ -107,6 +108,7 @@ const creatOrder = async (req, res, next) => {
                         unit_amount: product.finalPrice * 100,
                         product_data: {
                             name: product.name,
+                            images: [product.mainImage]
                         }
                     },
                     quantity: product.quantity
