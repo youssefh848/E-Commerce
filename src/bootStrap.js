@@ -17,6 +17,9 @@ export const bootStrap = (app, express) => {
     app.use('/wishList', wishListRouter)
     app.use('/cart', cartRouter)
     app.use('/order', orderRouter)
+    app.all("*", (req, res, next) => {
+        return res.status(404).json({ message: "Route not found " })
+    })
     // global error
     app.use(globalErrorHandling)
 }
