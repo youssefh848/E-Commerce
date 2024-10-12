@@ -16,11 +16,15 @@ const orderSchema = new Schema({
                 ref: 'Product',
                 required: true
             },
-            quantity: { type: Number, default: 1 },
+            quantity: { type: Number, default: 1, min: 1 },
             price: { type: Number, required: true },
             name: String,
             finalPrice: { type: Number, required: true },
             discount: { type: Number, default: 0 },
+            mainImage: {
+                secure_url: { type: String, required: true },
+                public_id: { type: String, required: true }
+            }
         }
     ],
     address: {

@@ -10,7 +10,7 @@ const creatOrder = async (req, res, next) => {
     const { phone, street, coupon, paymentMethod } = req.body;
     const user = req.authUser._id;
     // check coupon 
-    let couponExist = 0
+    let couponExist = null;
     if (coupon) {
         couponExist = await Coupon.findOne({ code: coupon })
         if (!couponExist) {
@@ -57,35 +57,36 @@ const creatOrder = async (req, res, next) => {
             quantity: product.quantity,
             discount: productExist.discount,
             name: productExist.name,
-            mainImage: productExist.mainImage.secure_url
+            mainImage: {
+                secure_url: productExist.mainImage.secure_url,
+                public_id: productExist.mainImage.public_id
+            }
         })
     }
     // Apply coupon discount if exists
     if (couponExist) {
         if (couponExist.discountType === discountTybes.FIXED_AMOUNT) {
-            // Ensure the final price doesn't go below zero
-            finalPrice = orderPrice - couponExist.discountAmount > 0
-                ? orderPrice - couponExist.discountAmount
-                : 0;
+            finalPrice = Math.max(orderPrice - couponExist.discountAmount, 0); // Ensure final price is not negative
         } else {
             // Percentage-based discount
             finalPrice = orderPrice - (orderPrice * (couponExist.discountAmount / 100));
+            finalPrice = Math.max(finalPrice, 0); // Ensure final price is not negative
         }
     } else {
         finalPrice = orderPrice;
     }
-    // Prevent negative price
-    if (finalPrice < 0) finalPrice = 0;
     // creat order
     const order = new Order({
         user,
         phone,
         address: { phone, street },
-        coupon: {
-            couponId: couponExist._id,
-            code: coupon,
-            discount: couponExist.discountAmount
-        },
+        ...(couponExist && {
+            coupon: {
+                couponId: couponExist._id,
+                code: coupon,
+                discount: couponExist.discountAmount
+            }
+        }),
         paymentMethod,
         products: orderProducts,
         orderPrice,
@@ -108,7 +109,7 @@ const creatOrder = async (req, res, next) => {
                         unit_amount: product.finalPrice * 100,
                         product_data: {
                             name: product.name,
-                            images: [product.mainImage]
+                            images: [product.mainImage.secure_url]
                         }
                     },
                     quantity: product.quantity
