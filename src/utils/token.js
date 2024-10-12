@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 
 // Function to generate a token
-export const generateToken = ({ payload, secretkey = 'secretkey' }) => {
+export const generateToken = ({ payload, secretkey = process.env.SECRET_KEY }) => {
     return jwt.sign(payload, secretkey, { expiresIn: '1h' });
 };
 
 // Function to verify the token
-export const verifyToken = ({ token, secretkey = 'secretkey' }) => {
+export const verifyToken = ({ token, secretkey = process.env.SECRET_KEY }) => {
     try {
         return jwt.verify(token, secretkey); // Returns the decoded payload if valid
     } catch (error) {

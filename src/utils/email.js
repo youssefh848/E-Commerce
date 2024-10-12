@@ -11,8 +11,8 @@ export const sendEmail = async ({
 
         service: "gmail",
         auth: {
-          user: "youssefhossam205@gmail.com",
-          pass: "gmltaofskjxtttve",
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
         },
         tls: {
             rejectUnauthorized: false,
