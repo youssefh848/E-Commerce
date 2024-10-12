@@ -7,6 +7,7 @@ import productRouter from "./product/product.router.js";
 import reviewRouter from "./review/review.router.js";
 import subcategoryRouter from './subcategory/subcategory.router.js';
 import wishListRouter from "./wishList/wishList.router.js";
+import orderRouter from "./order/order.router.js";
 
 export {
     authRouter,
@@ -18,5 +19,6 @@ export {
     reviewRouter,
     subcategoryRouter,
     wishListRouter,
+    orderRouter
 };
 

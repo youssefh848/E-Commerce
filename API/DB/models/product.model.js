@@ -91,6 +91,10 @@ const schema = new Schema({
     }
 
 }, { timestamps: true, versionKey: false })
+// virtual
+schema.virtual('finalPrice').get(function () {
+    return this.price - (this.price * ((this.discount || 0) / 100))
+})
 
 schema.methods.inStock = function (quantity) {
     return this.stock < quantity ? false : true

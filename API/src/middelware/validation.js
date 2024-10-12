@@ -1,7 +1,7 @@
 // import modules
 import joi from 'joi';
 import { APPError } from '../utils/appError.js';
-import { discountTybes } from '../utils/constant/enums.js';
+import { discountTybes, paymentMethods } from '../utils/constant/enums.js';
 
 const parseArray = (value, helper) => {
     let data = JSON.parse(value)
@@ -32,7 +32,9 @@ export const generalFields = {
     code: joi.string().max(6),
     discountAmount: joi.number().positive(),
     fromDate: joi.date().greater(Date.now() - 24 * 60 * 60 * 1000),
-    toDate: joi.date().greater(joi.ref('fromDate'))
+    toDate: joi.date().greater(joi.ref('fromDate')),
+    street: joi.string(),
+    paymentMethod: joi.string().valid(...Object.values(paymentMethods))
 }
 
 export const isValid = (schema) => {

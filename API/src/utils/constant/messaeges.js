@@ -32,11 +32,14 @@ export const messages = {
         invalidCredntiols: "invalid Credntiols",
         notVerified: "not Verified",
         loginSuccessfully: "login successfully",
-        unauthorized: "unauthorized to access this api"
+        unauthorized: "unauthorized to access this api",
+        notHaveCart: "you don't have cart, please add product to cart first",
     },
     review: generateMessage('review'),
     coupon: {
         ...generateMessage('coupon'),
         discountAmount: "must be less than 100",
+        notAssigned: "coupon not assigned to you",
+        couponExpired: "coupon expired, please use another one",
     }
 }

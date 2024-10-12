@@ -17,3 +17,17 @@ export const status = {
     BLOCKED: "blocked"
 }
 Object.freeze(status)
+
+export const paymentMethods = {
+    CASH: "cash",
+    VISA: 'visa'
+}
+Object.freeze(paymentMethods)
+
+export const orderStatus = {
+    PENDING: "pending",
+    IN_PROGRESS: "inProgress",
+    DELIVRED: "deleverid",
+    CANCELED: "canceled",
+    REFUNDED: "refunded"
+}
