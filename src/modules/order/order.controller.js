@@ -1,8 +1,9 @@
 import Stripe from "stripe";
 import { Cart, Coupon, Order, Product } from "../../../DB/index.js";
 import { APPError } from "../../utils/appError.js";
-import { discountTybes, paymentMethods } from "../../utils/constant/enums.js";
+import { discountTybes, paymentMethods, roles } from "../../utils/constant/enums.js";
 import { messages } from "../../utils/constant/messaeges.js";
+import { ApiFeature } from "../../utils/apiFeatures.js";
 
 // create order 
 const creatOrder = async (req, res, next) => {
@@ -94,6 +95,8 @@ const creatOrder = async (req, res, next) => {
     })
     // add to db 
     const createdOrder = await order.save()
+    // After creating the order, delete the cart
+    await Cart.deleteOne({ user });
     // integrate payment getway
     if (paymentMethod == paymentMethods.VISA) {
         const stripe = new Stripe(process.env.STRIBE_SECRET_KEY)
@@ -135,6 +138,129 @@ const creatOrder = async (req, res, next) => {
     })
 }
 
+// update order 
+const updateOrder = async (req, res, next) => {
+    // get data from req 
+    const { orderId } = req.params;
+    const { phone, street, paymentMethod, status } = req.body;
+    const user = req.authUser._id;
+    const userRole = req.authUser.role;
+    // check if order exist
+    const orderExist = await Order.findById(orderId)
+    if (!orderExist) {
+        return next(new APPError(messages.order.notExist, 404))
+    }
+    // Check if the user is not an admin and the order doesn't belong to them
+    if (userRole !== roles.ADMIN && !orderExist.user.equals(user)) {
+        return next(new APPError(messages.user.unauthorized, 403));
+    }
+    // Allow admins to update the order status, if provided
+    if (userRole === roles.ADMIN && status) {
+        orderExist.status = status;
+    }
+    // update fields if provides
+    if (phone) orderExist.address.phone = phone
+    if (street) orderExist.address.street = street
+    // Update payment method if provided
+    if (paymentMethod) {
+        orderExist.paymentMethod = paymentMethod;
+    }
+    // save update 
+    const updatedOrder = await orderExist.save();
+    // handel fail
+    if (!updatedOrder) {
+        return next(new APPError(messages.order.failToUpdate, 404));
+    }
+    // send res
+    res.status(200).json({
+        message: messages.order.updated,
+        success: true,
+        data: updatedOrder
+    })
+}
+
+// get orders
+const getOrders = async (req, res, next) => {
+    // get data from req 
+    const user = req.authUser._id;
+    const userRole = req.authUser.role;
+
+    let apiFeature;
+    // get orders for user 
+    if (userRole === roles.USER) {
+        apiFeature = new ApiFeature(Order.find({ user }), req.query).filter().sort().select().pagination();
+    }
+    // get all orders for admin
+    if (userRole === roles.ADMIN) {
+        apiFeature = new ApiFeature(Order.find(), req.query).filter().sort().select().pagination();
+    }
+
+    // fetch orders 
+    const orders = await apiFeature.mongooseQuery;
+    // send res
+    res.status(200).json({
+        message: messages.order.fetchedSuccessfully,
+        success: true,
+        data: orders
+    })
+}
+
+// getOrderById
+const getOrderById = async (req, res, next) => {
+    // get data from req
+    const user = req.authUser._id;
+    const userRole = req.authUser.role;
+    const { orderId } = req.params;
+
+    // Find the order by ID
+    let order = await Order.findById(orderId);
+    if (!order) {
+        return next(new APPError(messages.order.notExist, 404));
+    }
+    // Check if the user is authorized to view the order
+    if (userRole === roles.USER && !order.user.equals(user)) {
+        return next(new APPError(messages.user.unauthorized, 403));
+    }
+    // Send the response
+    res.status(200).json({
+        message: messages.order.fetchedSuccessfully,
+        success: true,
+        data: order
+    });
+}
+
+// delete order
+const deleteOrder = async (req, res, next) => {
+    // get data from req
+    const { orderId } = req.params;
+    const user = req.authUser._id;
+    const userRole = req.authUser.role;
+
+    // Check if the order exists
+    const orderExist = await Order.findById(orderId);
+    if (!orderExist) {
+        return next(new APPError(messages.order.notExist, 404));
+    }
+    // Check if the user is authorized to delete the order
+    if (userRole !== roles.ADMIN && !orderExist.user.equals(user)) {
+        return next(new APPError(messages.user.unauthorized, 403));
+    }
+    // Perform deletion
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+    if (!deletedOrder) {
+        return next(new APPError(messages.order.failToDelete, 500));
+    }
+    // Send response
+    res.status(200).json({
+        message: messages.order.deleted,
+        success: true
+    });
+}
+
 export {
-    creatOrder
+    creatOrder,
+    getOrders,
+    getOrderById,
+    updateOrder,
+    deleteOrder
 }

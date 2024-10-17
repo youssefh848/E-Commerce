@@ -3,6 +3,7 @@ import { authRouter, brandRouter, cartRouter, categoryRouter, couponRouter, orde
 
 export const bootStrap = (app, express) => {
     // parse req
+    // app.post('/webhook', express.raw({ type: 'application/json' }), webhook)
     app.use(express.json())
     // public filder
     app.use('/uploads', express.static('uploads'))

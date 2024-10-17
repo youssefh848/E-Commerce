@@ -7,3 +7,15 @@ export const createOrderVal = joi.object({
     paymentMethod: generalFields.paymentMethod,
     coupon: generalFields.code
 })
+
+export const updateOrderVal = joi.object({
+    orderId: generalFields.objectId.required(),
+    phone: generalFields.phone.optional(),
+    street: generalFields.street.optional(),
+    paymentMethod: generalFields.paymentMethod.optional(),
+    status: generalFields.orderStatus.optional()
+})
+
+export const getOrderByIdVal = joi.object({
+    orderId: generalFields.objectId.required()
+})
